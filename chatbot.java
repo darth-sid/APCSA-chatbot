@@ -11,6 +11,21 @@ public class chatbot
       return "Hello, let's talk.";
    }
 
+   // goes through statement and cleans out punctuation
+   public static String cleanStatement(String sentence)
+   {
+    sentence = sentence.trim();
+    String cleanSentence = "";
+
+     for(int index = 0; index < sentence.length(); index++)
+     {
+       if (Character.isAlphabetic(sentence.charAt(index)) 
+          || sentence.charAt(index) == ' ') {
+         cleanSentence += sentence.substring(index, index + 1);
+       }
+     }
+     return cleanSentence;
+   }
    /**
     * Gives a response to a user statement
     *
@@ -51,10 +66,10 @@ public class chatbot
       {
          // Look for a two word (you <something> me)
          // pattern
-         int psn = findKeyword(statement, "you", 0);
+         int pos = findKeyword(statement, "you", 0);
 
-         if (psn >= 0
-             && findKeyword(statement, "me", psn) >= 0)
+         if (pos >= 0
+             && findKeyword(statement, "me", pos) >= 0)
          {
             response = transformYouMeStatement(statement);
          }
@@ -74,17 +89,9 @@ public class chatbot
     */
    private String transformIWantToStatement(String statement)
    {
-      //  Remove the final period, if there is one
-      statement = statement.trim();
-      String lastChar = statement.substring(statement
-                                            .length() - 1);
-      if (lastChar.equals("."))
-      {
-         statement = statement.substring(0, statement
-                                            .length() - 1);
-      }
-      int psn = findKeyword (statement, "I want to", 0);
-      String restOfStatement = statement.substring(psn + 9).trim();
+      statement = cleanStatement(statement);
+      int pos = findKeyword (statement, "I want to", 0);
+      String restOfStatement = statement.substring(pos + 9).trim();
       return "What would it mean to " + restOfStatement + "?";
    }
 
@@ -109,20 +116,11 @@ public class chatbot
     */
    private String transformYouMeStatement(String statement)
    {
-      //  Remove the final period, if there is one
-      statement = statement.trim();
-      String lastChar = statement.substring(statement
-                                            .length() - 1);
-      if (lastChar.equals("."))
-      {
-         statement = statement.substring(0, statement
-                                            .length() - 1);
-      }
+      statement = cleanStatement(statement);
+      int posOfYou = findKeyword (statement, "you", 0);
+      int posOfMe = findKeyword (statement, "me", posOfYou + 3);
 
-      int psnOfYou = findKeyword (statement, "you", 0);
-      int psnOfMe = findKeyword (statement, "me", psnOfYou + 3);
-
-      String restOfStatement = statement.substring(psnOfYou + 3, psnOfMe).trim();
+      String restOfStatement = statement.substring(posOfYou + 3, posOfMe).trim();
       return "What makes you think that I " + restOfStatement + " you?";
    }
 
@@ -151,31 +149,31 @@ public class chatbot
    {
       String phrase = statement.trim();
       //  The only change to incorporate the startPos is in the line below
-      int psn = phrase.toLowerCase().indexOf(goal.toLowerCase(), startPos);
+      int pos = phrase.toLowerCase().indexOf(goal.toLowerCase(), startPos);
 
       //  Refinement--make sure the goal isn't part of a word
-      while (psn >= 0)
+      while (pos >= 0)
       {
          //  Find the string of length 1 before and after the word
          String before = " ", after = " ";
-         if (psn > 0)
+         if (pos > 0)
          {
-            before = phrase.substring (psn - 1, psn).toLowerCase();
+            before = phrase.substring(pos - 1, pos).toLowerCase();
          }
-         if (psn + goal.length() < phrase.length())
+         if (pos + goal.length() < phrase.length())
          {
-            after = phrase.substring(psn + goal.length(), psn + goal.length() + 1).toLowerCase();
+            after = phrase.substring(pos + goal.length(), pos + goal.length() + 1).toLowerCase();
          }
 
-         //  If before and after aren't letters, we've found the word
+         //  If before and after aren't letters, we have found the word
          if (((before.compareTo ("a") < 0 ) || (before.compareTo("z") > 0))  //  before is not a letter
          && ((after.compareTo ("a") < 0 ) || (after.compareTo("z") > 0)))
          {
-            return psn;
+            return pos;
          }
 
          //  The last position didn't work, so let's find the next, if there is one.
-         psn = phrase.indexOf(goal.toLowerCase(), psn + 1);
+         pos = phrase.indexOf(goal.toLowerCase(), pos + 1);
 
       }
 
@@ -229,9 +227,9 @@ public class chatbot
        public static void main(String[] args)
        {
              chatbot chatbot = new chatbot();
-             String statement = "I want to build a robot.";
+             String statement = "I want to find Nemo.";
              System.out.println("Statement: " + statement);
-             System.out.println("Response: " + maggie.getResponse(statement));
+             System.out.println("Response: " + chatbot.getResponse(statement));
        }
 
 }
