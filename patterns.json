@@ -1,0 +1,29 @@
+{"patterns":
+    {
+        "tag":"greeting",
+        "keywords":["Hello","Hi","Greetings","Hey","What's up","Hola"],
+        "responses":["Hi","Hello",""]
+    },
+    {
+        "tag":"",
+        "keywords":[],
+        "responses":[]
+    },
+    {
+        "tag":"",
+        "keywords":[],
+        "responses":[]
+    },
+    {
+        "tag":"",
+        "keywords":[],
+        "responses":[]
+    },
+    {
+        "tag":"",
+        "keywords":[],
+        "responses":[]
+    }
+
+
+}
