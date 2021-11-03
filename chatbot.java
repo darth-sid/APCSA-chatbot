@@ -1,3 +1,4 @@
+import java.util.Scanner;
 // Majority of code has been taken from the AP CSA Runestone Website (Laurie White)
 public class chatbot
 {
@@ -38,7 +39,7 @@ public class chatbot
       String response = "";
       if (statement.length() == 0)
       {
-         response = "Say something, please.";
+         response = "speak";
       }
 
       else if (findKeyword(statement, "no") >= 0)
@@ -226,8 +227,16 @@ public class chatbot
 
        public static void main(String[] args)
        {
-             chatbot chatbot = new chatbot();
-             String statement = "I want to find Nemo.";
+            Scanner in = new Scanner(System.in);
+            boolean conversing = true;
+            chatbot chatbot = new chatbot();
+            String statement = "";
+
+             while (conversing){
+                statement = in.nextLine();
+                System.out.println("Response: " + chatbot.getResponse(statement));
+                
+             }
              System.out.println("Statement: " + statement);
              System.out.println("Response: " + chatbot.getResponse(statement));
        }
