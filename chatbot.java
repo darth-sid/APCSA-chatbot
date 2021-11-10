@@ -12,12 +12,19 @@ public class chatbot
     * Get a default greeting
     * @return a greeting
     */
+
+   Hashtable<String, String> dict = new Hashtable<String,String>();
+   public chatbot() {
+      dict.put("greeting", "Hello there!~Hey there!~Deez Nutz!");
+      dict.put("random","Hmmmm~Interesting, tell me more.");
+      dict.put("clarify","What does that mean?~Speak more clearly, noob.");
+   }
    public String getGreeting()
    {
       String[] greetings = {
         "Hello there!",
         "Hey there!",
-        "Deez Nutz!"
+        "Yo!"
       };
       return greetings[(int) (Math.random() * greetings.length)];
    }
