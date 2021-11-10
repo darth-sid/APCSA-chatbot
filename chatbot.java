@@ -1,4 +1,9 @@
+import java.io.*;
+import java.util.*;
 import java.util.Scanner;
+import org.json.simple.JSONArray;
+import org.json.simple.parser.*;
+
 // Majority of code has been taken from the AP CSA Runestone Website (Laurie White)
 public class chatbot
 {
@@ -9,7 +14,12 @@ public class chatbot
     */
    public String getGreeting()
    {
-      return "Hello, let's talk.";
+      String[] greetings = {
+        "Hello there!",
+        "Hey there!",
+        "Deez Nutz!"
+      };
+      return greetings[(int) (Math.random() * greetings.length)];
    }
 
    // goes through statement and cleans out punctuation
@@ -226,19 +236,25 @@ public class chatbot
    }
 
        public static void main(String[] args)
-       {
+       {  
             Scanner in = new Scanner(System.in);
-            boolean conversing = true;
+            //boolean conversing = true;
             chatbot chatbot = new chatbot();
             String statement = "";
-
-             while (conversing){
-                statement = in.nextLine();
+        
+            // Conversation begins
+            System.out.println(chatbot.getGreeting());
+            System.out.println(chatbot.getGreeting());
+            System.out.println(chatbot.getGreeting());
+            statement = in.nextLine();
+            while (!(statement.equals("|quit"))){
+                // System.out.println(statement);
                 System.out.println("Response: " + chatbot.getResponse(statement));
+                statement = in.nextLine();
                 
-             }
-             System.out.println("Statement: " + statement);
-             System.out.println("Response: " + chatbot.getResponse(statement));
+            }
+            in.close();
+
        }
 
 }
