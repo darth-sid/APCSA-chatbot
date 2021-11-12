@@ -15,29 +15,18 @@ public class chatbot
 
    private static Hashtable<String, String> responseDict = new Hashtable<String,String>();
    private static Hashtable<String, String> keywordDict = new Hashtable<String,String>();
-   public chatbot() {
-      responseDict.put("greeting", "Hello there!~Hey there!~Deez Nutz!");
-      responseDict.put("random","Hmmmm~Interesting, tell me more.");
-      responseDict.put("clarify","What does that mean?~Speak more clearly, noob.");
+    public chatbot() {
+        responseDict.put("greeting", "Hello there!~Hey there!~Deez Nutz!");
+        responseDict.put("random","Hmmmm~Interesting, tell me more.");
+        responseDict.put("clarify","What does that mean?~Speak more clearly, noob.");
 
-      keywordDict.put("greeting","Hello~Hi~What's Up~Hey");
-   }
-   public String getGreeting()
-   {
-      String[] greetings = {
-        "Hello there!",
-        "Hey there!",
-        "Yo!"
-      };
-      return greetings[(int) (Math.random() * greetings.length)];
-   }
-
-   public static String getMessage(String intent){
+        keywordDict.put("greeting","Hello~Hi~What's Up~Hey");
+    }
+    public static String getMessage(String intent){
         String responses = responseDict.get(intent);
         String[] responseList = responses.split("~");
         return responseList[(int) (Math.random() * responseList.length)];
-   }
-    
+    }
     public static String getIntent(String sentence){
         String cleanSentence = cleanStatement(sentence);
         Set<String> keys = keywordDict.keySet();
@@ -66,61 +55,6 @@ public class chatbot
      }
      return cleanSentence;
    }
-   /**
-    * Gives a response to a user statement
-    *
-    * @param statement
-    *            the user statement
-    * @return a response based on the rules given
-    */
-   public String getResponse(String statement)
-   {
-      String response = "";
-      if (statement.length() == 0)
-      {
-         response = "speak";
-      }
-
-      else if (findKeyword(statement, "no") >= 0)
-      {
-         response = "Why so negative?";
-      }
-      else if (findKeyword(statement, "mother") >= 0
-               || findKeyword(statement, "father") >= 0
-               || findKeyword(statement, "sister") >= 0
-               || findKeyword(statement, "brother") >= 0)
-      {
-         response = "Tell me more about your family.";
-      }
-
-      // Responses which require transformations
-      else if (findKeyword(statement, "I want to", 0) >= 0)
-      {
-         response = transformIWantToStatement(statement);
-      }
-
-      // ADD Responses which require transformations!
-
-
-      else
-      {
-         // Look for a two word (you <something> me)
-         // pattern
-         int pos = findKeyword(statement, "you", 0);
-
-         if (pos >= 0
-             && findKeyword(statement, "me", pos) >= 0)
-         {
-            response = transformYouMeStatement(statement);
-         }
-         else
-         {
-            response = getRandomResponse();
-         }
-      }
-      return response;
-   }
-
    /**
     * Take a statement with "I want to <something>." and transform it into
     * "What would it mean to <something>?"
@@ -177,93 +111,10 @@ public class chatbot
    }
 
    /**
-    * Search for one word in phrase.  The search is not case sensitive.
-    * This method will check that the given goal is not a substring of a longer string
-    * (so, for example, "I know" does not contain "no").
-    * @param statement the string to search
-    * @param goal the string to search for
-    * @param startPos the character of the string to begin the search at
-    * @return the index of the first occurrence of goal in statement or -1 if it's not found
-    */
-   private int findKeyword(String statement, String goal, int startPos)
-   {
-      String phrase = statement.trim();
-      //  The only change to incorporate the startPos is in the line below
-      int pos = phrase.toLowerCase().indexOf(goal.toLowerCase(), startPos);
-
-      //  Refinement--make sure the goal isn't part of a word
-      while (pos >= 0)
-      {
-         //  Find the string of length 1 before and after the word
-         String before = " ", after = " ";
-         if (pos > 0)
-         {
-            before = phrase.substring(pos - 1, pos).toLowerCase();
-         }
-         if (pos + goal.length() < phrase.length())
-         {
-            after = phrase.substring(pos + goal.length(), pos + goal.length() + 1).toLowerCase();
-         }
-
-         //  If before and after aren't letters, we have found the word
-         if (((before.compareTo ("a") < 0 ) || (before.compareTo("z") > 0))  //  before is not a letter
-         && ((after.compareTo ("a") < 0 ) || (after.compareTo("z") > 0)))
-         {
-            return pos;
-         }
-
-         //  The last position didn't work, so let's find the next, if there is one.
-         pos = phrase.indexOf(goal.toLowerCase(), pos + 1);
-
-      }
-
-      return -1;
-   }
-
-   /**
-    * Search for one word in phrase.  The search is not case sensitive.
-    * This method will check that the given goal is not a substring of a longer string
-    * (so, for example, "I know" does not contain "no").  The search begins at the beginning of the string.
-    * @param statement the string to search
-    * @param goal the string to search for
-    * @return the index of the first occurrence of goal in statement or -1 if it's not found
-    */
-   private int findKeyword(String statement, String goal)
-   {
-      return findKeyword (statement, goal, 0);
-   }
-
-   /**
     * Pick a default response to use if nothing else fits.
     * @return a non-committal string
     */
-   private String getRandomResponse()
-   {
-      final int NUMBER_OF_RESPONSES = 4;
-      double r = Math.random();
-      int whichResponse = (int)(r * NUMBER_OF_RESPONSES);
-      String response = "";
-
-      if (whichResponse == 0)
-      {
-         response = "Interesting, tell me more.";
-      }
-      else if (whichResponse == 1)
-      {
-         response = "Hmmm.";
-      }
-      else if (whichResponse == 2)
-      {
-         response = "Do you really think so?";
-      }
-      else if (whichResponse == 3)
-      {
-         response = "You don't say.";
-      }
-
-      return response;
-   }
-
+   
        public static void main(String[] args)
        {  
             Scanner in = new Scanner(System.in);
