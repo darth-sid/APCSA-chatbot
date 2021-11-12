@@ -1,8 +1,8 @@
 import java.io.*;
 import java.util.*;
 import java.util.Scanner;
-import org.json.simple.JSONArray;
-import org.json.simple.parser.*;
+//import org.json.simple.JSONArray;
+//import org.json.simple.parser.*;
 
 // Majority of code has been taken from the AP CSA Runestone Website (Laurie White)
 public class chatbot
@@ -13,11 +13,11 @@ public class chatbot
     * @return a greeting
     */
 
-   Hashtable<String, String> dict = new Hashtable<String,String>();
+   Hashtable<String, String> responseDict = new Hashtable<String,String>();
    public chatbot() {
-      dict.put("greeting", "Hello there!~Hey there!~Deez Nutz!");
-      dict.put("random","Hmmmm~Interesting, tell me more.");
-      dict.put("clarify","What does that mean?~Speak more clearly, noob.");
+      responseDict.put("greeting", "Hello there!~Hey there!~Deez Nutz!");
+      responseDict.put("random","Hmmmm~Interesting, tell me more.");
+      responseDict.put("clarify","What does that mean?~Speak more clearly, noob.");
    }
    public String getGreeting()
    {
@@ -27,6 +27,12 @@ public class chatbot
         "Yo!"
       };
       return greetings[(int) (Math.random() * greetings.length)];
+   }
+
+   public String getMessage(String intent){
+        String responses = responseDict.get(intent);
+        String[] responseList = responses.split("~");
+        return responseList[(int) (Math.random() * responseList.length)];
    }
 
    // goes through statement and cleans out punctuation
@@ -250,9 +256,9 @@ public class chatbot
             String statement = "";
         
             // Conversation begins
-            System.out.println(chatbot.getGreeting());
-            System.out.println(chatbot.getGreeting());
-            System.out.println(chatbot.getGreeting());
+            System.out.println(chatbot.getMessage("greeting"));
+            System.out.println(chatbot.getMessage("clarify"));
+            System.out.println(chatbot.getMessage("random"));
             statement = in.nextLine();
             while (!(statement.equals("|quit"))){
                 // System.out.println(statement);
