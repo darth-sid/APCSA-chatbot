@@ -13,11 +13,14 @@ public class chatbot
     * @return a greeting
     */
 
-   Hashtable<String, String> responseDict = new Hashtable<String,String>();
+   private static Hashtable<String, String> responseDict = new Hashtable<String,String>();
+   private static Hashtable<String, String> keywordDict = new Hashtable<String,String>();
    public chatbot() {
       responseDict.put("greeting", "Hello there!~Hey there!~Deez Nutz!");
       responseDict.put("random","Hmmmm~Interesting, tell me more.");
       responseDict.put("clarify","What does that mean?~Speak more clearly, noob.");
+
+      keywordDict.put("greeting","Hello~Hi~What's Up~Hey");
    }
    public String getGreeting()
    {
@@ -29,11 +32,24 @@ public class chatbot
       return greetings[(int) (Math.random() * greetings.length)];
    }
 
-   public String getMessage(String intent){
+   public static String getMessage(String intent){
         String responses = responseDict.get(intent);
         String[] responseList = responses.split("~");
         return responseList[(int) (Math.random() * responseList.length)];
    }
+    
+    public static String getIntent(String sentence){
+        String cleanSentence = cleanStatement(sentence);
+        Set<String> keys = keywordDict.keySet();
+        for (String key : keys){
+            String keywords = keywordDict.get(key);
+            String[] keywordList = keywords.split("~");
+            for (String keyword : keywordList){
+                if (cleanSentence.contains(keyword)) return key;
+            }
+        }
+        return "random";
+    }
 
    // goes through statement and cleans out punctuation
    public static String cleanStatement(String sentence)
@@ -262,7 +278,7 @@ public class chatbot
             statement = in.nextLine();
             while (!(statement.equals("|quit"))){
                 // System.out.println(statement);
-                System.out.println("Response: " + chatbot.getResponse(statement));
+                System.out.println("Response: " + chatbot.getMessage(getIntent(statement)));
                 statement = in.nextLine();
                 
             }
