@@ -36,7 +36,9 @@ public class chatbot
         String[] responseList = responses.split("~");
         if (intent.contains("transform")){
             String keyword = data[1];
-            return responseList[(int) (Math.random() * responseList.length)]+keyword;
+            String responseTemp = responseList[(int) (Math.random() * responseList.length)]; 
+            if (responseTemp.toLowerCase().contains("you")) keyword = findAndReplace(keyword, "you", "me", 10);
+            return responseTemp+keyword;
         }
         return responseList[(int) (Math.random() * responseList.length)];
     }
@@ -110,6 +112,20 @@ public class chatbot
             return word;
         }
         else return "urmom";
+   }
+
+   private static String findAndReplace(String sentence, String find, String replace, int repeat){
+        String statement = sentence + " ";
+        for (int i = 0; i < repeat; i++){
+            String temp = "";
+            if (statement.contains(find)){
+                temp += statement.substring(0,statement.indexOf(find));
+                temp += replace;
+                temp += statement.substring(statement.indexOf(find)+statement.substring(statement.indexOf(find),statement.length()).indexOf(" "),statement.length());
+                statement = temp;
+            }
+        }
+       return statement;
    }
       /**
     * Take a statement with "you <something> me" and transform it into
