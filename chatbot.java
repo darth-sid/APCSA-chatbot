@@ -1,4 +1,3 @@
-import java.io.*;
 import java.util.*;
 import java.util.Scanner;
 //import org.json.simple.JSONArray;
@@ -15,6 +14,11 @@ public class chatbot
 
    private static Hashtable<String, String> responseDict = new Hashtable<String,String>();
    private static Hashtable<String, String> keywordDict = new Hashtable<String,String>();
+   private static String[] topicsList = {"topic1", "topic2", "topic3"};
+   private static boolean topicMode = false;
+   private static int topicIndex = 0; // Index of the topicsList
+   private static int factIndex = 0; // Index of the facts
+
     public chatbot() {
         responseDict.put("greeting", "Hello there!~Hey there!~Deez Nutz!");
         responseDict.put("random","Hmmmm~Interesting, tell me more.");
@@ -22,23 +26,63 @@ public class chatbot
         responseDict.put("transform[want]","Why do you want ~I also want ");
         responseDict.put("transform[need]","You don't need ~Why do you need ~I do not need ");
         responseDict.put("reason","yes");
+
+        // Random topics list
+        responseDict.put("topic1","Want to talk about carbon hybridization?~[carbon hybridization fact 1]. Want to hear another fact?~[carbon hybridization fact 2]");
+        responseDict.put("topic2","Want to talk about orbitals?~[orbitals fact 1]. Want to hear another fact?~[orbitals fact 2]");
+        responseDict.put("topic2","Want to talk about water?~[water fact 1]. Want to hear another fact?~[water fact 2]");
+        responseDict.put("rejection","Ok!~Okay!~Aww it's a fun topic to talk about...~Alright!~Ok then!");
+
         keywordDict.put("greeting","Hello~Hi~What's Up~Hey");
         keywordDict.put("transform[want]","I want~I wish");
         keywordDict.put("transform[need]","I need~I require");
         keywordDict.put("reason","why");
-
+        keywordDict.put("tellmore","yes~ye~yea~yeah~ya~ye~yuh~yup~yep~sure~cool~alright~fine~okay~ok~bruh");
+        //keywordDict.put("rejection","no~nah~nu~nope~im good~its fine~im fine~ill pass~stop");
 
     }
     public String getMessage(String raw){
         String[] data = raw.split("~");
         String intent = data[0];
-        String responses = responseDict.get(intent);
-        String[] responseList = responses.split("~");
+        String responses = "";
+        String[] responseList = {};
+        if (topicMode == false) {
+          responses = responseDict.get(intent);
+          responseList = responses.split("~");
+        }
+        // Stops going through random topic
+        if (!(intent.contains("tellmore")) && topicMode == true) {
+          responses = responseDict.get("rejection");
+          responseList = responses.split("~");
+          topicMode = false;
+          factIndex = 0;
+          return responseList[(int) (Math.random() * responseList.length)];
+        }
+        // Continues random topic
+        if (intent.contains("tellmore") && topicMode == true) {
+          responses = responseDict.get(topicsList[topicIndex]);
+          responseList = responses.split("~");
+          int tempIndex = factIndex;
+          if (factIndex + 1 == responseList.length) {
+            topicMode = false;
+            factIndex = -1; // Resets index so it is ready for next random topic
+          }
+          factIndex++;
+          return responseList[tempIndex];
+        }
         if (intent.contains("transform")){
             String keyword = data[1];
             String responseTemp = responseList[(int) (Math.random() * responseList.length)]; 
             if (responseTemp.toLowerCase().contains("you")) keyword = findAndReplace(keyword, "you", "me", 10);
             return responseTemp+keyword;
+        }
+        if (intent.contains("random") && ((int) ((Math.random() * 5)) == 1)) {
+          topicMode = true;
+          topicIndex = (int) (Math.random() * (topicsList.length - 1));
+          responses = responseDict.get(topicsList[topicIndex]);
+          responseList = responses.split("~");
+          factIndex++;
+          return responseList[factIndex - 1];
         }
         return responseList[(int) (Math.random() * responseList.length)];
     }
@@ -53,6 +97,8 @@ public class chatbot
                     if(key.contains("transform")){
                         return key+"~"+keyword(sentence,keyword);
                     }
+                    if(key.contains("tellmore") && topicMode == false) {continue;}
+                    if(key.contains("rejection") && topicMode == false) {continue;}
                     return key;
                 }
             }
@@ -75,6 +121,7 @@ public class chatbot
      }
      return cleanSentence;
    }
+
    /**
     * Take a statement with "I want to <something>." and transform it into
     * "What would it mean to <something>?"
@@ -169,6 +216,8 @@ public class chatbot
         
             // Conversation begins
             System.out.println(chatbot.getMessage("greeting"));
+            System.out.println(chatbot.getMessage("clarify"));
+            System.out.println(chatbot.getMessage("random"));
             statement = in.nextLine();
             while (!(statement.equals("|quit"))){
                 System.out.println("Response: " + chatbot.getMessage(chatbot.getIntent(statement)));
