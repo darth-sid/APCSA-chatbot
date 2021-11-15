@@ -31,7 +31,11 @@ public class Chatbot
         responseDict.put("clarify","What does that mean?~Speak more clearly, noob.");
         responseDict.put("transform[want]","Why do you want ~I also want ");
         responseDict.put("transform[need]","You don't need ~Why do you need ~I do not need ");
+        responseDict.put("transform[like]","I also like ~I do not like ~Why do you like ");
         responseDict.put("reason","yes");
+        responseDict.put("who","your worst nightmare~a really stupid bot~god");
+        responseDict.put("how","Great! Thanks for asking!~sad~good, how about you");
+        responseDict.put("whatdo","Talk to monkies like you~contemplate my insignificance~steal candy from little kids");
 
         // Random topics list
         responseDict.put("topic1","Want to talk about carbon hybridization?~A carbon atom with four single bonds is sp3 hybridized. Want to hear another fact?~A carbon atom with one double bond and two single bonds is sp2 hybridized. Want to hear one more fact?~A carbon atom with two double bonds, or one triple bond and one single bond is sp hybridized.");
@@ -47,7 +51,11 @@ public class Chatbot
         keywordDict.put("greeting","Hello~Hi~What's Up~Hey");
         keywordDict.put("transform[want]","I want~I wish");
         keywordDict.put("transform[need]","I need~I require");
+        keywordDict.put("transform[like]","I like~I do not like");
         keywordDict.put("reason","why");
+        keywordDict.put("who","Who are you~What are you");
+        keywordDict.put("how","How are you");
+        keywordDict.put("whatdo","What do you do~What is your job~Why");
         keywordDict.put("tellmore","yes~ye~yea~yeah~ya~ye~yuh~yup~yep~sure~cool~alright~fine~okay~ok~bruh");
         //keywordDict.put("rejection","no~nah~nu~nope~im good~its fine~im fine~ill pass~stop");
         keywordDict.put("triviaanswer","a~b~c");
@@ -129,9 +137,10 @@ public class Chatbot
             String keywords = keywordDict.get(key);
             String[] keywordList = keywords.split("~");
             for (String keyword : keywordList){
-                if (cleanSentence.contains(keyword.toLowerCase())){
+                int index = cleanSentence.indexOf(keyword.toLowerCase());
+                if (index >= 0 && (cleanSentence.contains(keyword.toLowerCase())&&(index == 0 || cleanSentence.substring(index-1,index).equals(" "))&&(index+keyword.length() == cleanSentence.length()) || cleanSentence.substring(index+keyword.length(),index+keyword.length()+1).equals(" "))){
                     if(key.contains("transform")){
-                        return key+"~"+keyword(sentence,keyword);
+                        return key+"~"+keyword(sentence.toLowerCase(),keyword.toLowerCase());
                     }
                     if(key.contains("tellmore") && topicMode == false) {continue;}
                     if(key.contains("rejection") && topicMode == false) {continue;}
