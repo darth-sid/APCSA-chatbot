@@ -1,3 +1,5 @@
+package events.chatbotcsa;
+
 import java.util.*;
 import java.util.Scanner;
 //import org.json.simple.JSONArray;
@@ -51,7 +53,7 @@ public class chatbot
         keywordDict.put("triviaanswer","a~b~c");
 
     }
-    public String getMessage(String raw){
+    public static String getMessage(String raw){
         String[] data = raw.split("~");
         String intent = data[0];
         String responses = "";
@@ -94,7 +96,9 @@ public class chatbot
         }
         if (intent.contains("transform")){
             String keyword = data[1];
-            return responseList[(int) (Math.random() * responseList.length)]+keyword;
+            String responseTemp = responseList[(int) (Math.random() * responseList.length)]; 
+            if (responseTemp.toLowerCase().contains("you")) keyword = findAndReplace(keyword, "you", "me", 10);
+            return responseTemp+keyword;
         }
 
         int specialRandomizer = (int) (Math.random() * 5); // Randomizer may go for random topic or trivia
@@ -118,7 +122,7 @@ public class chatbot
         // Default response to intent
         return responseList[(int) (Math.random() * responseList.length)];
     }
-    public String getIntent(String sentence){
+    public static String getIntent(String sentence){
         String cleanSentence = cleanStatement(sentence);
         Set<String> keys = keywordDict.keySet();
         for (String key : keys){
@@ -196,6 +200,20 @@ public class chatbot
         }
         else return "urmom";
    }
+
+   private static String findAndReplace(String sentence, String find, String replace, int repeat){
+        String statement = sentence + " ";
+        for (int i = 0; i < repeat; i++){
+            String temp = "";
+            if (statement.contains(find)){
+                temp += statement.substring(0,statement.indexOf(find));
+                temp += replace;
+                temp += statement.substring(statement.indexOf(find)+statement.substring(statement.indexOf(find),statement.length()).indexOf(" "),statement.length());
+                statement = temp;
+            }
+        }
+       return statement;
+   }
       /**
     * Take a statement with "you <something> me" and transform it into
     * "What makes you think that I <something> you?"
@@ -229,10 +247,9 @@ public class chatbot
     * @return a non-committal string
     */
    
-       public static void main(String[] args)
+       /*public static void main(String[] args)
        {  
             Scanner in = new Scanner(System.in);
-            //boolean conversing = true;
             chatbot chatbot = new chatbot();
             String statement = "";
         
@@ -248,6 +265,6 @@ public class chatbot
             }
             in.close();
 
-       }
+       }*/
 
 }
