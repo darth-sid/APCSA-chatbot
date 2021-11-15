@@ -6,7 +6,7 @@ import java.util.Scanner;
 //import org.json.simple.parser.*;
 
 // Majority of code has been taken from the AP CSA Runestone Website (Laurie White)
-public class chatbot
+public class Chatbot
 {
 
    /**
@@ -25,7 +25,7 @@ public class chatbot
    private static boolean triviaMode = false;
    private static String[] triviaList = {"trivia1", "trivia2", "trivia3"};
 
-    public chatbot() {
+    public Chatbot() {
         responseDict.put("greeting", "Hello there!~Hey there!~Deez Nutz!");
         responseDict.put("random","Hmmmm~Interesting, tell me more.");
         responseDict.put("clarify","What does that mean?~Speak more clearly, noob.");
