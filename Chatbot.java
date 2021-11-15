@@ -26,7 +26,7 @@ public class Chatbot
    private static String[] triviaList = {"trivia1", "trivia2", "trivia3"};
 
     public Chatbot() {
-        responseDict.put("greeting", "Hello there!~Hey there!~Deez Nutz!");
+        responseDict.put("greeting", "Hello there!~Hey there!");
         responseDict.put("random","Hmmmm~Interesting, tell me more.");
         responseDict.put("clarify","What does that mean?~Speak more clearly, noob.");
         responseDict.put("transform[want]","Why do you want ~I also want ");
@@ -34,15 +34,15 @@ public class Chatbot
         responseDict.put("reason","yes");
 
         // Random topics list
-        responseDict.put("topic1","Want to talk about carbon hybridization?~[carbon hybridization fact 1]. Want to hear another fact?~[carbon hybridization fact 2]");
-        responseDict.put("topic2","Want to talk about orbitals?~[orbitals fact 1]. Want to hear another fact?~[orbitals fact 2]");
-        responseDict.put("topic2","Want to talk about water?~[water fact 1]. Want to hear another fact?~[water fact 2]");
+        responseDict.put("topic1","Want to talk about carbon hybridization?~A carbon atom with four single bonds is sp3 hybridized. Want to hear another fact?~A carbon atom with one double bond and two single bonds is sp2 hybridized. Want to hear one more fact?~A carbon atom with two double bonds, or one triple bond and one single bond is sp hybridized.");
+        responseDict.put("topic2","Want to talk about orbitals?~Each orbital can only contain up to 2 electrons. Want to hear another fact?~You can find the number of orbitals in a shell by squaring the shell's number.");
+        responseDict.put("topic2","Want to talk about water?~Water has a lone pair on the oxygen atom, giving the molecule a bent shape. Want to hear another fact?~Water is polar, since oxygen is more electronegative than the hydrogen atoms and the molecule is bent.");
         responseDict.put("rejection","Ok!~Okay!~Aww it's a fun topic to talk about...~Alright!~Ok then!");
 
         // Trivia questions list
-        responseDict.put("trivia1", "a|What is the name of the first orbital?\na) s\nb) p \nc) f");
-        responseDict.put("trivia2", "b|What is the name of the second orbital?\na) s\nb) p \nc) f");
-        responseDict.put("trivia3", "b|What is the name of the fourth orbital?\na) s\nb) p \nc) f");
+        responseDict.put("trivia1", "a|What is the name of the first subshell?\na) s\nb) p \nc) f");
+        responseDict.put("trivia2", "b|What is the name of the second subshell?\na) s\nb) p \nc) f");
+        responseDict.put("trivia3", "b|What is the name of the fourth subshell?\na) s\nb) p \nc) f");
 
         keywordDict.put("greeting","Hello~Hi~What's Up~Hey");
         keywordDict.put("transform[want]","I want~I wish");
