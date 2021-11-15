@@ -1,3 +1,5 @@
+package events.chatbotcsa;
+
 import java.util.*;
 import java.util.Scanner;
 //import org.json.simple.JSONArray;
@@ -41,7 +43,7 @@ public class chatbot
         //keywordDict.put("rejection","no~nah~nu~nope~im good~its fine~im fine~ill pass~stop");
 
     }
-    public String getMessage(String raw){
+    public static String getMessage(String raw){
         String[] data = raw.split("~");
         String intent = data[0];
         String responses = "";
@@ -86,7 +88,7 @@ public class chatbot
         }
         return responseList[(int) (Math.random() * responseList.length)];
     }
-    public String getIntent(String sentence){
+    public static String getIntent(String sentence){
         String cleanSentence = cleanStatement(sentence);
         Set<String> keys = keywordDict.keySet();
         for (String key : keys){
@@ -207,10 +209,9 @@ public class chatbot
     * @return a non-committal string
     */
    
-       public static void main(String[] args)
+       /*public static void main(String[] args)
        {  
             Scanner in = new Scanner(System.in);
-            //boolean conversing = true;
             chatbot chatbot = new chatbot();
             String statement = "";
         
@@ -226,6 +227,6 @@ public class chatbot
             }
             in.close();
 
-       }
+       }*/
 
 }
