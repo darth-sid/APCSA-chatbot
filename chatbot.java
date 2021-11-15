@@ -19,6 +19,10 @@ public class chatbot
    private static int topicIndex = 0; // Index of the topicsList
    private static int factIndex = 0; // Index of the facts
 
+   private static int triviaIndex = 0;
+   private static boolean triviaMode = false;
+   private static String[] triviaList = {"trivia1", "trivia2", "trivia3"};
+
     public chatbot() {
         responseDict.put("greeting", "Hello there!~Hey there!~Deez Nutz!");
         responseDict.put("random","Hmmmm~Interesting, tell me more.");
@@ -33,12 +37,18 @@ public class chatbot
         responseDict.put("topic2","Want to talk about water?~[water fact 1]. Want to hear another fact?~[water fact 2]");
         responseDict.put("rejection","Ok!~Okay!~Aww it's a fun topic to talk about...~Alright!~Ok then!");
 
+        // Trivia questions list
+        responseDict.put("trivia1", "a|What is the name of the first orbital?\na) s\nb) p \nc) f");
+        responseDict.put("trivia2", "b|What is the name of the second orbital?\na) s\nb) p \nc) f");
+        responseDict.put("trivia3", "b|What is the name of the fourth orbital?\na) s\nb) p \nc) f");
+
         keywordDict.put("greeting","Hello~Hi~What's Up~Hey");
         keywordDict.put("transform[want]","I want~I wish");
         keywordDict.put("transform[need]","I need~I require");
         keywordDict.put("reason","why");
         keywordDict.put("tellmore","yes~ye~yea~yeah~ya~ye~yuh~yup~yep~sure~cool~alright~fine~okay~ok~bruh");
         //keywordDict.put("rejection","no~nah~nu~nope~im good~its fine~im fine~ill pass~stop");
+        keywordDict.put("triviaanswer","a~b~c");
 
     }
     public String getMessage(String raw){
@@ -46,9 +56,21 @@ public class chatbot
         String intent = data[0];
         String responses = "";
         String[] responseList = {};
-        if (topicMode == false) {
+        if (topicMode == false && triviaMode == false) {
           responses = responseDict.get(intent);
           responseList = responses.split("~");
+        }
+        // Response to a trivia question answer
+        if (triviaMode == true) {
+          responses = responseDict.get(triviaList[triviaIndex]);
+          if (intent.contains("triviaanswer")) {
+            if (data[1].equals(responses.substring(0, 1))) {
+              triviaMode = false;
+              return "Your answer is correct!";
+            }
+          }
+          triviaMode = false;
+          return "Incorrect! The answer was " + responses.substring(0, 1) + "!";
         }
         // Stops going through random topic
         if (!(intent.contains("tellmore")) && topicMode == true) {
@@ -74,7 +96,10 @@ public class chatbot
             String keyword = data[1];
             return responseList[(int) (Math.random() * responseList.length)]+keyword;
         }
-        if (intent.contains("random") && ((int) ((Math.random() * 5)) == 1)) {
+
+        int specialRandomizer = (int) (Math.random() * 5); // Randomizer may go for random topic or trivia
+        // RANDOM CONVERSATION
+        if (intent.contains("random") && specialRandomizer == 1) {
           topicMode = true;
           topicIndex = (int) (Math.random() * (topicsList.length - 1));
           responses = responseDict.get(topicsList[topicIndex]);
@@ -82,6 +107,15 @@ public class chatbot
           factIndex++;
           return responseList[factIndex - 1];
         }
+        // TRIVIA QUESTION
+        if (intent.contains("random") && specialRandomizer == 2) {
+          triviaMode = true;
+          triviaIndex = (int) (Math.random() * (triviaList.length - 1));
+          responses = responseDict.get(triviaList[triviaIndex]);
+          return "Random trivia question!\n\n" + responses.substring(2);
+        }
+
+        // Default response to intent
         return responseList[(int) (Math.random() * responseList.length)];
     }
     public String getIntent(String sentence){
@@ -97,6 +131,10 @@ public class chatbot
                     }
                     if(key.contains("tellmore") && topicMode == false) {continue;}
                     if(key.contains("rejection") && topicMode == false) {continue;}
+                    if(key.contains("triviaanswer") && triviaMode == false) {continue;}
+                    if(key.contains("triviaanswer") && triviaMode == true) {
+                      return key + "~" + sentence;
+                    }
                     return key;
                 }
             }
